@@ -4,6 +4,8 @@ const {otptoemailforverification} = require("../Services/EmailService/EmailServi
 const { User, Shopkeeper } = require("../Model/UserModel/UserModel");
 const Product=require("../Model/ProductModel/ProductModel")
 const HandleResponse=require("../HandleResponse/HandleResponse")
+const jwt=require("jsonwebtoken");
+const checkuserdetails = require("../Middlewares/Checkuserdetails");
 const Routes = express.Router();
 
 Routes.get("/HealthCheckApi", async (req, resp) =>HandleResponse(resp,202,"Server Health is Okay"))
@@ -52,7 +54,9 @@ Routes.post("/login", async (req, resp) => {
 
     if (password === result.password) {
       if (!result.service) return HandleResponse(resp,401,"Your service is disabled");
-      return HandleResponse(resp,202,"login successfully",result._id)
+      const payload={id:result._id}
+      const token=jwt.sign(payload,process.env.JSON_SECRET_KEY)
+      return HandleResponse(resp,202,"login successfully",token)
     }
     return HandleResponse(resp,401,"Invalid Password");
   } catch (error) {
@@ -88,8 +92,7 @@ Routes.post("/disable", async (req, resp) => {
   }
 });
 
-
-Routes.post("/addproduct",async(req,resp)=>{
+Routes.post("/addproduct",checkuserdetails,async(req,resp)=>{
     try {
         const {name,company,model,description,price,discount,rate,tax,stock}=req.body
         if(!name ||!company ||!model ||!description ||!price ||!discount ||!rate ||!tax) return HandleResponse(resp,404,"Field is Empty")
@@ -103,7 +106,7 @@ Routes.post("/addproduct",async(req,resp)=>{
         return HandleResponse(resp,500,"Internal Server error",null, error )
     }
 })
-Routes.get("/getproducts",async(req,resp)=>{
+Routes.get("/getproducts",checkuserdetails,async(req,resp)=>{
     try {
         const allproducts=await Product.find({userid:req.user._id})
         if(allproducts.length===0) return HandleResponse(resp,404,"Your product list is empty")
@@ -113,7 +116,7 @@ Routes.get("/getproducts",async(req,resp)=>{
       return HandleResponse(resp,500,"Internal Server error",null, error )       
     }
 })
-Routes.delete("/deleteproduct/:id",async(req,resp)=>{
+Routes.delete("/deleteproduct/:id",checkuserdetails,async(req,resp)=>{
     try {
         const {id}=req.params
         if(!id) return HandleResponse(resp,404,"Plz select the product")
@@ -127,7 +130,7 @@ Routes.delete("/deleteproduct/:id",async(req,resp)=>{
        return HandleResponse(resp,500,"Internal Server error",null, error );
     }
 })
-Routes.put("/updateproduct/:id",async(req,resp)=>{
+Routes.put("/updateproduct/:id",checkuserdetails,async(req,resp)=>{
     try {
         const {name,company,model,description,price,discount,rate,tax,stock}=req.body
         if(!name ||!company ||!model ||!description ||!price ||!discount ||!rate ||!tax) return HandleResponse(resp,404,"Field is Empty")
@@ -147,45 +150,5 @@ Routes.put("/updateproduct/:id",async(req,resp)=>{
         return HandleResponse(resp,500,"Internal Server error",null,error);
     }
 })
-
-
-
-// const validateObjectKeys = (object, schema) => {
-//     const schemaKeys = Object.keys(schema.paths).filter((key) => key !== '__v' && key !== '_id');
-//     const objectKeys = Object.keys(object);
-  
-//     for (const key of schemaKeys) {
-//       if (!object.hasOwnProperty(key) || object[key] === null || object[key] === '') return "The key"+key+" is missing or empty."
-//     }
-  
-//     for (const key of objectKeys) {
-//       if (!schemaKeys.includes(key)) return "The key"+key+" is not declared in the schema."
-//     }
-
-//     return null;
-//   };
-// Routes.post("/addmultipleproducts",async(req,resp)=>{
-//     try {
-//         const {items} = req.body;
-    
-//         if (!Array.isArray(items) || items.length === 0) return resp.status(400).json({ message: 'Invalid input. Provide an array of items.' })
-    
-//         const errors = [];
-//         items.map(async(item,index)=>{
-//             const validationError = validateObjectKeys(item, Product.schema);
-//             if (validationError) errors.push({ index, error: validationError })
-        
-//             const existingproduct = await Product.findOne({ model: item.model });
-//             if(existingproduct) errors.push({ index, error: "The modelNumber" +item.model+"already exists."})
-//         })    
-    
-//         if(errors.length > 0) return resp.status(400).json({message: 'Validation errors occurred.',errors});
-    
-//         const result = await Product.insertMany(items);
-//         return resp.status(201).json({ message: 'All products are added successfully',result})
-//       } catch (error) {
-//         return resp.status(500).json({message: 'Internal Server Error'});
-//       }
-// })
 
 module.exports = Routes;
