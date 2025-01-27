@@ -1,8 +1,20 @@
 import React from 'react'
 import Footer from '../../CommonComponents/Footer'
 import Title from '../../CommonComponents/Title'
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 const InvoiceDetails = () => {
+    const downloadInvoice = () => {
+        const invoiceElement = document.getElementById('invoice-content'); // Target the invoice container
+        html2canvas(invoiceElement, { scale: 2 }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('Invoice.pdf'); // Download as Invoice.pdf
+        });
+    };
   return (
     <div className="main-content">
     <div className="page-content">
@@ -11,7 +23,7 @@ const InvoiceDetails = () => {
             <div className="row justify-content-center">
                 <div className="col-xxl-9">
                     <div className="card" id="demo">
-                        <div className="card-body">
+                        <div className="card-body" id='invoice-content'>
                             <div className="row p-4">
                                 <div className="col-lg-9">
                                     <h3 className="fw-bold mb-4">Invoice: Lezeco-00335 </h3>
@@ -177,7 +189,7 @@ const InvoiceDetails = () => {
                                         </div>
                                         <div className="hstack gap-2 justify-content-end d-print-none mt-4">
                                             <a className="btn btn-info"><i className="ri-printer-line align-bottom me-1" /> Print</a>
-                                            <a className="btn btn-primary"><i className="ri-download-2-line align-bottom me-1" /> Download</a>
+                                            <a onClick={downloadInvoice} className="btn btn-primary"><i className="ri-download-2-line align-bottom me-1" /> Download</a>
                                         </div>
                                     </div>
                                 </div>
