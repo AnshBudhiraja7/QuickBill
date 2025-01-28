@@ -2,7 +2,7 @@ import React from 'react'
 import Footer from '../../CommonComponents/Footer'
 import Title from '../../CommonComponents/Title'
 
-const ReviewExcelData = () => {
+const ReviewExcelData = ({data}) => {
   return (
     <div className="main-content">
         <div className="page-content">
@@ -40,422 +40,41 @@ const ReviewExcelData = () => {
                                             <tr className="text-muted text-uppercase">
                                                 <th style={{ width: 50 }}>
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="checkAll" defaultValue="option" />
+                                                        S.No
                                                     </div>
                                                 </th>
-                                                <th scope="col" style={{ width: 500 }}>Product Name</th>
-                                                <th scope="col">Category</th>
+                                                <th scope="col" style={{ width: "20%" }}>Product Name & Model</th>
+                                                <th scope="col" style={{ width: '25%' }}>Description</th>
+                                                <th scope="col">Company</th>
                                                 <th scope="col">In Stock</th>
-                                                <th scope="col">Rate</th>
-                                                <th scope="col" style={{ width: '16%' }}>Price</th>
-                                                <th scope="col" style={{ width: '6%' }}>Action</th>
+                                                <th scope="col">Rate(₹)</th>
+                                                <th scope="col" style={{ width: '8%' }}>Price(₹)</th>
+                                                <th scope="col" style={{ width: '6%' }}>Discount(%)</th>
+                                                <th scope="col" style={{ width: '6%' }}>Tax(%)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-1.png" className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">World's most expensive t shirt</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Fashion</td>
-                                                <td>65 / 125</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />3.9</span>
-                                                </td>
-                                                <td><div>$742.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-2.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Urban Ladder Pashe Chair</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Furniture</td>
-                                                <td>122 / 232</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />4.1</span>
-                                                </td>
-                                                <td><div>$852.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-3.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">350 ml Glass Grocery Container</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Grocery</td>
-                                                <td>14 / 36</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />4.3</span>
-                                                </td>
-                                                <td><div>$125.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-4.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Fabric Dual Tone Living Room Chair</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Furniture</td>
-                                                <td>74 / 100</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />2.2</span>
-                                                </td>
-                                                <td><div>$360.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-5.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Crux Motorsports Helmet</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Accessories</td>
-                                                <td>32 / 90</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />3.0</span>
-                                                </td>
-                                                <td><div>$230.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-6.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Half Sleeve T-Shirts (Blue)</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Fashion</td>
-                                                <td>320 / 412</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />3.3</span>
-                                                </td>
-                                                <td><div>$652.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-7.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Noise Evolve Smartwatch</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Fashion</td>
-                                                <td>142 / 230</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />4.5</span>
-                                                </td>
-                                                <td><div>$332.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                    View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"  ><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                    Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"  ><i className="las la-file-download fs-18 align-middle me-2 text-muted" />
-                                                                    Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />
-                                                                    Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" id="check1" defaultValue="option" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3 avatar-sm">
-                                                            <div className="avatar-title bg-light rounded"> <img src="assets/images/products/img-8.png"   className="avatar-xs" /> </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h6 className="fs-16 mb-1">Sweatshirt for Men (Pink)</h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>Fashion</td>
-                                                <td>322 / 423</td>
-                                                <td>
-                                                    <span className="badge bg-light text-body fs-12 fw-medium"><i className="mdi mdi-star text-warning me-1" />3.2</span>
-                                                </td>
-                                                <td><div>$463.00</div></td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i className="las la-ellipsis-h align-middle fs-18" />
-                                                        </button>
-                                                        <ul className="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <button className="dropdown-item"><i className="las la-eye fs-18 align-middle me-2 text-muted" />View</button>
-                                                            </li>
-                                                            <li>
-                                                                <button className="dropdown-item"><i className="las la-pen fs-18 align-middle me-2 text-muted" />Edit</button>
-                                                            </li>
-                                                            <li>
-                                                                <a className="dropdown-item"><i className="las la-file-download fs-18 align-middle me-2 text-muted" /> Download</a>
-                                                            </li>
-                                                            <li className="dropdown-divider" />
-                                                            <li>
-                                                                <a className="dropdown-item remove-item-btn" href="#">
-                                                                    <i className="las la-trash-  fs-18 align-middle me-2 text-muted" />Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            {
+                                                data.map((obj,index)=>{
+                                                    return(<tr>
+                                                        <td><div className="form-check">{index+1}</div></td>
+                                                        <td>
+                                                            <div className="d-flex align-items-center">
+                                                                <div className="flex-grow-1">
+                                                                    <h6 className="fs-16 mb-1">{obj?.name +" & "+obj?.model}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>{obj?.description}</td>
+                                                        <td>{obj?.company}</td>
+                                                        <td>{obj?.stock}</td>
+                                                        <td>{"₹"+obj?.rate}</td>
+                                                        <td>{"₹"+obj?.price}</td>
+                                                        <td>{obj?.discount+"%"}</td>
+                                                        <td>{obj?.tax+"%"}</td>
+                                                    </tr>)
+                                                })
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
