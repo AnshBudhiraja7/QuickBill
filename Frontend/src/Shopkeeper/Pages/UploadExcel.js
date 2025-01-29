@@ -8,9 +8,7 @@ const UploadExcel = () => {
   return (
     <div>
       <ShopkeeperHeader/>
-      {
-        data && data.length!==0 ? <ReviewExcelData data={data}/>:<AddExcelData fun={setdata}/>
-      }
+      {data && data.length!==0 ? <ReviewExcelData data={data}/>:<AddExcelData fun={setdata}/>}
     </div>
   )
 }

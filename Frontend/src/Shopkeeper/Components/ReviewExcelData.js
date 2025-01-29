@@ -1,16 +1,43 @@
 import React from 'react'
 import Footer from '../../CommonComponents/Footer'
 import Title from '../../CommonComponents/Title'
+import { useNavigate } from 'react-router-dom'
 
 const ReviewExcelData = ({data}) => {
+    const navigate=useNavigate()
+    const Submit=async()=>{
+        try {
+            const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
+            if(!userinfo || !userinfo.Authorization){
+                localStorage.clear();
+                alert("Unauthorised user")
+                window.history.replaceState(null,null,"/")
+                return navigate("/",{replace:true})
+            } 
+            const response=await fetch("http://localhost:3010/api/addmultipleproducts",{
+                method:"post",
+                body:JSON.stringify({items:data}),
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":userinfo.Authorization
+                }
+            })
+            const result=await response.json()
+            alert(result?.message)
+            //if(response.status===201) console.log(result.data)
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong. Try again later.")
+        }
+    }
   return (
     <div className="main-content">
         <div className="page-content">
             <div className="container-fluid">
                 <Title Name={"Product List"} />
                 <div className="row pb-4 gy-3">
-                    <div className="col-sm-4">
-                        <a href="#" className="btn btn-primary addtax-modal"><i className="las la-plus me-1" /> Add Product</a>
+                    <div className="col-sm-4" onClick={Submit}>
+                        <a href="#" className="btn btn-primary addtax-modal">Submit</a>
                     </div>
                     <div className="col-sm-auto ms-auto">
                         <div className="d-flex gap-3">
