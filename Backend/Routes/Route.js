@@ -9,11 +9,11 @@ const checkuserdetails = require("../Middlewares/Checkuserdetails");
 const Routes = express.Router();
 
 Routes.get("/HealthCheckApi", async (req, resp) =>HandleResponse(resp,202,"Server Health is Okay"))
-Routes.post("/verifyshopkeeper", async (req, resp) => {
+Routes.post("/verifyuser",checkuserdetails,async (req, resp) => {
   try {
-    const { name, phone, email, password, address, city, state } = req.body;
+    const { name, phone, email, password, address, city, state,role } = req.body;
 
-    if (!name || !phone || !email || !password || !city || !address || !state) return HandleResponse(resp,404,"Field is Empty")
+    if (!name || !phone || !email || !password || !city || city==="None" || !address || !state || state==="None" || !role) return HandleResponse(resp,404,"Field is Empty")
 
     const existinguser = await User.findOne({ email });
     if (existinguser) return HandleResponse(resp,400,"Account already exists")
@@ -24,11 +24,11 @@ Routes.post("/verifyshopkeeper", async (req, resp) => {
     return HandleResponse(resp,500,"Internal Server Error",null,error);
   }
 });
-Routes.post("/createshopkeeper", async (req, resp) => {
+Routes.post("/createuser",checkuserdetails,async (req, resp) => {
   try {
-    const { name, phone, email, address, password, city, state, otp } =req.body;
+    const { name, phone, email, address, password, city, state,role, otp } =req.body;
 
-    if (!name || !phone || !email || !address || !city || !state || !password) return HandleResponse(resp,404,"Field is Empty")
+    if (!name || !phone || !email || !address || !city || city==="None" || !state || state==="None" || !password ||!role) return HandleResponse(resp,404,"Field is Empty")
 
     if (!otp) return HandleResponse(resp,404,"Enter the otp");
 
@@ -38,7 +38,7 @@ Routes.post("/createshopkeeper", async (req, resp) => {
     const response = verifyotp(email, otp);
     if (!response.status) return HandleResponse(resp,404,response.message);
 
-    const result = await Shopkeeper.create({name,phone,email,password,address,city,state});
+    const result = await User.create({name,phone,email,password,address,city,state,role});
     return HandleResponse(resp,201,"Account created successfully",result);
   } catch (error) {
     return HandleResponse(resp,500,"Internal Server error",null,error)
@@ -199,6 +199,16 @@ Routes.post("/addmultipleproducts",checkuserdetails,async(req,resp)=>{
       } catch (error) {
         return HandleResponse(resp,500,'Internal Server Error',null,error);
        }
+})
+
+Routes.get("/getallshopkeepers",checkuserdetails,async(req,resp)=>{
+ try {
+  const result=await Shopkeeper.find().select("email _id")
+  if(result.length===0) return HandleResponse(resp,400,"No Shopkeeper found")
+  return HandleResponse(resp,202,"Shopkeeper fetched successfully",result)
+ } catch (error) {
+  return HandleResponse(resp,500,"Internal Server error",null,error)
+ }
 })
 
 module.exports = Routes;

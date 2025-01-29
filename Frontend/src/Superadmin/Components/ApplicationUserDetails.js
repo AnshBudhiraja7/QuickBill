@@ -101,10 +101,10 @@ const ApplicationUserDetails = () => {
     <div className="main-content">
         <div className="page-content">
             <div className="container-fluid">
-                <Title Name={"Taxes"} />
+                <Title Name={"Users"} />
                 <div className="row pb-4 gy-3">
                     <div className="col-sm-4">
-                        <button onClick={()=>setToggle(true)} className="btn btn-primary addtax-modal" ><i className="las la-plus me-1" /> Add Taxes</button>
+                        <button onClick={()=>setToggle(true)} className="btn btn-primary addtax-modal" ><i className="las la-plus me-1" /> Add Users</button>
                     </div>
                     <div className="col-sm-auto ms-auto">
                         <div className="d-flex gap-3">
@@ -187,7 +187,7 @@ const ApplicationUserDetails = () => {
         </div>
     <Footer/>
     </div>
-    {Toggle && <CreateAccountModal fun={setToggle}/>} 
+    {Toggle && <CreateAccountModal fun={setToggle} getallusers={getallusers}/>} 
     </div>
 )}
 
