@@ -1,8 +1,18 @@
-import React, { useState } from 'react'
-import {Link} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import {Link, useNavigate} from 'react-router-dom'
 
 const ShopkeeperHeader = () => {
 const[Toggle,setToggle]=useState(false)
+const navigate=useNavigate()
+useEffect(()=>{
+    const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
+    if(!userinfo || !userinfo.Authorization) return navigate("/")
+},[])
+const logout=()=>{
+    localStorage.clear()
+    window.history.replaceState(null,null,"/")
+    return navigate("/",{replace:true})
+}
   return (
   <div className={Toggle?"menu":""}>
     <div id="layout-wrapper">
@@ -44,7 +54,7 @@ const[Toggle,setToggle]=useState(false)
                                     </span>
                                 </button>
                                 <div className="dropdown-menu dropdown-menu-end">
-                                    <Link className="dropdown-item text-danger" to={'/'}><i className="bx bx-power-off fs-15 align-middle me-1 text-danger" /> <span key="t-logout">Logout</span></Link>
+                                    <a style={{cursor:"pointer"}} className="dropdown-item text-danger" onClick={logout}><i className="bx bx-power-off fs-15 align-middle me-1 text-danger" /> <span key="t-logout">Logout</span></a>
                                 </div>
                             </div>
                     </div>
@@ -110,9 +120,9 @@ const[Toggle,setToggle]=useState(false)
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link to={'/'} className="nav-link menu-link" href="#" >
+                            <a onClick={logout} className="nav-link menu-link" style={{cursor:"pointer"}} >
                                 <i className="las la-lock"/><span>Logout</span>
-                            </Link>
+                            </a>
                         </li>
                     </ul>
                 </div>

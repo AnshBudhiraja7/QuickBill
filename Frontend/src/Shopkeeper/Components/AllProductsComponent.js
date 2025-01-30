@@ -1,12 +1,73 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Title from "../../CommonComponents/Title"
 import Footer from "../../CommonComponents/Footer"
 import EditProductModal from './EditProductModal'
 import AddProductModal from './AddProductModal'
 const AllProductsComponent = () => {
-   const [EditProductToggle,setEditProductToggle]=useState(false)
-   const [AddProductToggle,setAddProductToggle]=useState(false)
+   const[EditProductToggle,setEditProductToggle]=useState(false)
+   const[AddProductToggle,setAddProductToggle]=useState(false)
+   const[data,setdata]=useState([])
+   const[editproductid,seteditproductid]=useState(null)
+   const[editobj,seteditobj]=useState({})
+   const[editloading,seteditloading]=useState(false)
+   const navigate=useNavigate()
+   useEffect(()=>{
+        const getdata=async()=>{
+        const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
+        if(userinfo && userinfo.Authorization) return await getallproducts(userinfo.Authorization)
+        localStorage.clear()
+        return navigate("/")
+        }
+        getdata()
+   },[])
+   const getallproducts=async(token)=>{
+    try {
+        const response=await fetch("http://localhost:3010/api/getproducts",{
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":token
+            }
+        })
+        const result=await response.json()
+        if(response.status===202) setdata(result.data)
+        else alert(result?.message)
+    } catch (error) {
+        console.log(error);
+        alert("Something went wrong. Try again later")
+    }
+   }
+   const deleteproduct=async(id)=>{
+    try {
+        const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
+        if(!userinfo || !userinfo.Authorization){
+            localStorage.clear();
+            alert("Unauthorised user")
+            window.history.replaceState(null,null,"/")
+            return navigate("/",{replace:true})
+        }
+        const response=await fetch("http://localhost:3010/api/deleteproduct/"+id,{
+            method:"delete",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":userinfo.Authorization
+            }
+        })
+        const result=await response.json()
+        alert(result?.message)
+        if(response.status===202){await getallproducts(userinfo.Authorization)}
+    } catch (error) {
+        console.log(error);
+        alert("Something went wrong. Try again later.")
+    }
+   }
+   const editproduct=(id)=>{
+    const editproductitem=data?.filter(obj=>obj._id===id)
+    const {name,model,description,company,rate,tax,discount,price,stock,_id}=editproductitem[0]    
+    seteditobj({name,model,description,company,rate,tax,discount,price,stock})
+    seteditproductid(_id)
+    setEditProductToggle(true)
+   }
    return (
         <div>
             <div className="main-content">
@@ -23,7 +84,7 @@ const AllProductsComponent = () => {
                                         <input type="text" className="form-control" id="searchMemberList" placeholder="Search for Result" />
                                         <i className="las la-search search-icon" />
                                     </div>
-                                    <div className>
+                                    <div>
                                         <button type="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false" className="btn btn-soft-info btn-icon fs-14"><i className="las la-ellipsis-v fs-18" /></button>
                                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                                             <li><a className="dropdown-item" href="#">All</a></li>
@@ -42,17 +103,7 @@ const AllProductsComponent = () => {
                                         <ul className="nav nav-tabs nav-tabs-custom nav-success mb-3" role="tablist">
                                             <li className="nav-item">
                                                 <a className="nav-link active" data-bs-toggle="tab" href="#nav-border-top-all" role="tab" aria-selected="true">
-                                                    All
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a className="nav-link" data-bs-toggle="tab" href="#nav-border-top-paid" role="tab" aria-selected="false">
-                                                    Paid
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a className="nav-link" data-bs-toggle="tab" href="#nav-border-top-pending" role="tab" aria-selected="false">
-                                                    Pending
+                                                    Your Products
                                                 </a>
                                             </li>
                                         </ul>
@@ -64,264 +115,42 @@ const AllProductsComponent = () => {
                                                             <table className="table table-hover table-nowrap align-middle mb-0">
                                                                 <thead className="table-light">
                                                                     <tr className="text-muted text-uppercase">
-                                                                        <th scope="col">Member</th>
-                                                                        <th scope="col">Date</th>
-                                                                        <th scope="col">Payment Details</th>
-                                                                        <th scope="col" style={{ width: '16%' }}>Payment Type</th>
-                                                                        <th scope="col" style={{ width: '12%' }}>Amount</th>
-                                                                        <th scope="col" style={{ width: '12%' }}>Status</th>
-                                                                        <th scope="col" style={{ width: '12%' }}>Action</th>
+                                                                        <th scope='col' style={{ width: '1%' }}>S.No</th>
+                                                                        <th scope="col" style={{ width: '16%' }}>Product Name-Model</th>
+                                                                        <th scope="col" style={{ width: '16%' }}>Product Description</th>
+                                                                        <th scope="col" style={{ width: '8%' }}>Company</th>
+                                                                        <th scope="col" style={{ width: '3%' }}>Stock</th>
+                                                                        <th scope="col" style={{ width: '5%' }}>Rate(₹)</th>
+                                                                        <th scope="col" style={{ width: '3%' }}>Dis.(%)</th>
+                                                                        <th scope="col" style={{ width: '3%' }}>Tax(%)</th>
+                                                                        <th scope="col" style={{ width: '5%' }}>Price(₹)</th>
+                                                                        <th scope="col" style={{ width: '5%' }}>Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Donald Risher</a>
-                                                                        </td>
-                                                                        <td>20 Sep, 2022</td>
-                                                                        <td>Maintenance</td>
-                                                                        <td>Google Pay</td>
-                                                                        <td>$1200.00</td>
-                                                                        <td><span className="badge bg-success-subtle text-success p-2">Paid</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                      <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <button onClick={()=>setEditProductToggle(true)} className="dropdown-item" href="javascript:void(0);"><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                                            Edit</button>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Brody Holman</a>
-                                                                        </td>
-                                                                        <td>12 Arl, 2022</td>
-                                                                        <td>Flight Booking</td>
-                                                                        <td>Credit Card</td>
-                                                                        <td>$3600.00</td>
-                                                                        <td><span className="badge bg-danger-subtle text-danger p-2">Failed</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                         <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <button className="dropdown-item" href="javascript:void(0);"><i className="las la-pen fs-18 align-middle me-2 text-muted" />
-                                                                                            Edit</button>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Donald Risher</a>
-                                                                        </td>
-                                                                        <td>20 Sep, 2022</td>
-                                                                        <td>Maintenance</td>
-                                                                        <td>Google Pay</td>
-                                                                        <td>$1200.00</td>
-                                                                        <td><span className="badge bg-success-subtle text-success p-2">Paid</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                      <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Brody Holman</a>
-                                                                        </td>
-                                                                        <td>12 Arl, 2022</td>
-                                                                        <td>Flight Booking</td>
-                                                                        <td>Credit Card</td>
-                                                                        <td>$3600.00</td>
-                                                                        <td><span className="badge bg-danger-subtle text-danger p-2">Failed</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                         <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Donald Risher</a>
-                                                                        </td>
-                                                                        <td>20 Sep, 2022</td>
-                                                                        <td>Maintenance</td>
-                                                                        <td>Google Pay</td>
-                                                                        <td>$1200.00</td>
-                                                                        <td><span className="badge bg-success-subtle text-success p-2">Paid</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                      <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Brody Holman</a>
-                                                                        </td>
-                                                                        <td>12 Arl, 2022</td>
-                                                                        <td>Flight Booking</td>
-                                                                        <td>Credit Card</td>
-                                                                        <td>$3600.00</td>
-                                                                        <td><span className="badge bg-danger-subtle text-danger p-2">Failed</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                         <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Donald Risher</a>
-                                                                        </td>
-                                                                        <td>20 Sep, 2022</td>
-                                                                        <td>Maintenance</td>
-                                                                        <td>Google Pay</td>
-                                                                        <td>$1200.00</td>
-                                                                        <td><span className="badge bg-success-subtle text-success p-2">Paid</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                      <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <a href="#javascript: void(0);" className="text-body align-middle fw-medium">Brody Holman</a>
-                                                                        </td>
-                                                                        <td>12 Arl, 2022</td>
-                                                                        <td>Flight Booking</td>
-                                                                        <td>Credit Card</td>
-                                                                        <td>$3600.00</td>
-                                                                        <td><span className="badge bg-danger-subtle text-danger p-2">Failed</span></td>
-                                                                        <td>
-                                                                            <div className="dropdown">
-                                                                                <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                    <i className="las la-ellipsis-h align-middle fs-18" />
-                                                                                </button>
-                                                                                <ul className="dropdown-menu dropdown-menu-end">
-                                                                                    <li>
-                                                                                         <Link to={'/TransactionList'} > <button className="dropdown-item" href="javascript:void(0);"><i className="las la-eye fs-18 align-middle me-2 text-muted" />
-                                                                                            View</button></Link>
-                                                                                    </li>
-                                                                                    <li className="dropdown-divider" />
-                                                                                    <li>
-                                                                                        <a className="dropdown-item remove-item-btn" href="#">
-                                                                                            <i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />
-                                                                                            Delete
-                                                                                        </a>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
+                                                                    { data && data.length!==0?data?.map((obj,index)=>{
+                                                                        return(<tr key={index}>
+                                                                            <td>{index+1}</td>
+                                                                            <td>{obj?.name+" - "+obj?.model}</td>
+                                                                            <td>{obj?.description}</td>
+                                                                            <td><span className="badge bg-success-subtle text-success p-2">{obj?.company}</span></td>
+                                                                            <td>{obj?.stock}</td>
+                                                                            <td>₹{obj?.rate}</td>
+                                                                            <td>{obj?.discount}%</td>
+                                                                            <td>{obj?.tax}%</td>
+                                                                            <td>₹{obj?.price}</td>
+                                                                            <td>
+                                                                                <div className="dropdown">
+                                                                                    <button className="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <i className="las la-ellipsis-h align-middle fs-18" />
+                                                                                    </button>
+                                                                                    <ul className="dropdown-menu dropdown-menu-end">
+                                                                                        <li><button onClick={()=>editproduct(obj._id)} className="dropdown-item"><i className="las la-pen fs-18 align-middle me-2 text-muted" />Edit</button></li>
+                                                                                        <li onClick={()=>deleteproduct(obj._id)}><a className="dropdown-item remove-item-btn" href="#"><i className="las la-trash-alt fs-18 align-middle me-2 text-muted" />Delete</a></li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>)}):<tr className='text-center'><td colSpan={9}>No Product Found</td></tr>}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -359,8 +188,8 @@ const AllProductsComponent = () => {
                 </div>
                 <Footer/>
             </div>
-            {AddProductToggle && <AddProductModal setToggle={setAddProductToggle}/>}
-            {EditProductToggle && <EditProductModal setToggle={setEditProductToggle}/>}
+            {AddProductToggle && <AddProductModal getallproducts={getallproducts} setToggle={setAddProductToggle}/>}
+            {EditProductToggle && <EditProductModal getallproducts={getallproducts} setobj={seteditobj} setloading={seteditloading} setid={seteditproductid} loading={editloading} obj={editobj} id={editproductid} setToggle={setEditProductToggle}/>}
         </div>
 )}
 
