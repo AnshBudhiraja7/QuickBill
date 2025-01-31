@@ -11,6 +11,10 @@ const AllProductsComponent = () => {
    const[editproductid,seteditproductid]=useState(null)
    const[editobj,seteditobj]=useState({})
    const[editloading,seteditloading]=useState(false)
+   const[products,setproducts]=useState([])
+   const[currentpage,setcurrentpage]=useState(1)
+   const[totalpages,settotalpages]=useState(0)
+   const productsperpage=5
    const navigate=useNavigate()
    useEffect(()=>{
         const getdata=async()=>{
@@ -21,6 +25,16 @@ const AllProductsComponent = () => {
         }
         getdata()
    },[])
+   useEffect(()=>{
+        if(data.length!==0){
+            const indexoflastproduct = currentpage * productsperpage;
+            const indexoffirstproduct = indexoflastproduct - productsperpage;
+            const currentproducts = data.slice(indexoffirstproduct, indexoflastproduct);
+            const totalpage = Math.ceil(data.length / productsperpage);
+            setproducts(currentproducts)
+            settotalpages(totalpage)
+        }
+    },[data,currentpage])
    const getallproducts=async(token)=>{
     try {
         const response=await fetch("http://localhost:3010/api/getproducts",{
@@ -128,7 +142,7 @@ const AllProductsComponent = () => {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    { data && data.length!==0?data?.map((obj,index)=>{
+                                                                    { products && products.length!==0?products?.map((obj,index)=>{
                                                                         return(<tr key={index}>
                                                                             <td>{index+1}</td>
                                                                             <td>{obj?.name+" - "+obj?.model}</td>
@@ -150,7 +164,7 @@ const AllProductsComponent = () => {
                                                                                     </ul>
                                                                                 </div>
                                                                             </td>
-                                                                        </tr>)}):<tr className='text-center'><td colSpan={9}>No Product Found</td></tr>}
+                                                                        </tr>)}):<tr className='text-center'><td colSpan={10}>No Product Found</td></tr>}
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -160,24 +174,16 @@ const AllProductsComponent = () => {
                                         </div>
                                         <div className="row align-items-center mb-2 gy-3">
                                             <div className="col-md-5">
-                                                <p className="mb-0 text-muted">Showing <b>1</b> to <b>5</b> of <b>10</b> results</p>
+                                                <p className="mb-0 text-muted">Showing <b>{(currentpage - 1) * productsperpage + 1}</b> to {" "}<b>{Math.min(currentpage * productsperpage, data.length)}</b>{" "} of <b>{data.length}</b> results</p>
                                             </div>
                                             <div className="col-sm-auto ms-auto">
-                                                <nav aria-label="...">
-                                                    <ul className="pagination mb-0">
-                                                        <li className="page-item disabled">
-                                                            <span className="page-link">Previous</span>
-                                                        </li>
-                                                        <li className="page-item active"><a className="page-link" href="#">1</a></li>
-                                                        <li className="page-item" aria-current="page">
-                                                            <span className="page-link">2</span>
-                                                        </li>
-                                                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                                        <li className="page-item">
-                                                            <a className="page-link" href="#">Next</a>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
+                                            <nav aria-label="...">
+                                                <ul className="pagination mb-0">
+                                                    {currentpage!==1 ? <li style={{cursor:"pointer"}} className="page-item" onClick={()=>setcurrentpage(currentpage-1)}><span className="page-link">Previous</span></li>:<li className="page-item disabled"><span className="page-link">Previous</span></li>}
+                                                    {Array.from({ length: totalpages }, (_, index)=><li key={index} onClick={() => setcurrentpage(index + 1)} className={currentpage===index+1?'page-item active':'page-item'}><a className="page-link">{index+1}</a></li>)}
+                                                    {currentpage!==totalpages ? <li className="page-item" onClick={() => setcurrentpage(currentpage + 1)}><a className="page-link" href="#">Next</a></li>:<li className="page-item disabled"><a className="page-link" href="#">Next</a></li>}
+                                                </ul>
+                                            </nav>
                                             </div>
                                         </div>
                                     </div>

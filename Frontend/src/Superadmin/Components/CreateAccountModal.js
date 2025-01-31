@@ -7,6 +7,7 @@ const CreateAccountModal = (props) => {
     const[obj,setobj]=useState({})
     const[shopkeepers,setshopkeepers]=useState([])
     const[otp,setotp]=useState('')
+    const[data,setdata]=useState({})
     const navigate=useNavigate()
     const getallshopkeepers=async(token)=>{
         try {
@@ -24,10 +25,29 @@ const CreateAccountModal = (props) => {
             alert("Something went wrong. Try again later")
         }
     }
+    const getallcityandstate=async(token)=>{
+        try {
+        const response=await fetch("http://localhost:3010/api/getallcitiesandstates",{
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":token
+            }
+        })
+        const result=await response.json()
+        if(response.status===202)setdata(result.data)
+        else alert(result?.message)
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong. Try again later") 
+        }
+    }
     useEffect(()=>{
             const getdata=async()=>{
             const userinfo=JSON.parse(localStorage.getItem("Userinfo"))
-            if(userinfo && userinfo.Authorization) return await getallshopkeepers(userinfo.Authorization)
+            if(userinfo && userinfo.Authorization){
+                await getallshopkeepers(userinfo.Authorization)
+                return await getallcityandstate(userinfo.Authorization)
+            }
             localStorage.clear()
             return navigate("/")
             }
@@ -146,27 +166,28 @@ const CreateAccountModal = (props) => {
                                             <input type="text" className="form-control" onChange={set} name='address' id="Address" placeholder="Enter Address" />
                                         </div>
                                         <div className="row">
-                                            <div className="col-6">
-                                                <div className="mb-4">
-                                                    <label htmlFor="City" className="form-label">City/Town</label>
-                                                    <select className="form-select" onChange={set} name='city' aria-label="Default select example">
-                                                        <option value="None">Select City/Town</option>
-                                                        <option value="Rohtak">Rohtak</option>
-                                                        <option value="Sonipat">Sonipat</option>
-                                                        <option value="Gohana">Gohana</option>
-                                                        <option value="Panipat">Panipat</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
+                                            {
+                                                data && Object.keys(data).length!==0 && <div className="col-6">
                                                 <div className="mb-4">
                                                     <label htmlFor="State" className="form-label">State</label>
                                                     <select className="form-select" onChange={set} name='state' aria-label="Default select example">
                                                         <option value="None">Select State</option>
-                                                        <option value="Haryana">Haryana</option>
+                                                        {Object.keys(data)?.map((state,index)=><option key={index} value={state}>{state}</option>)}
                                                     </select>
                                                 </div>
                                             </div>
+                                            }
+                                            {
+                                                data && Object.keys(data).length!==0 && obj?.state && obj?.state!=="None" && <div className="col-6">
+                                                <div className="mb-4">
+                                                    <label htmlFor="City" className="form-label">City/Town</label>
+                                                    <select className="form-select" onChange={set} name='city' aria-label="Default select example">
+                                                        <option value="None">Select City/Town</option>
+                                                        {data[obj?.state]?.map((city,index)=><option key={index} value={city}>{city}</option>)}
+                                                    </select>
+                                                </div>
+                                                </div>
+                                            }
                                         </div>
                                         <div className="row">
                                             <div className="col-4">

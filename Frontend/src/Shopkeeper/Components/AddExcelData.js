@@ -19,6 +19,14 @@ const AddExcelData = ({fun}) => {
       fun(array);
     }
   }
+  const download=()=>{
+    const link = document.createElement("a");
+    link.href = "/assets/format.xlsx"; // Ensure this file exists in public/assets
+    link.setAttribute("download", "format.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   return (
     <div className="main-content">
   <div className="page-content">
@@ -52,23 +60,19 @@ const AddExcelData = ({fun}) => {
                             </div>
                             <div className="flex-grow-1">
                               <div className="pt-1">
-                                <h5 className="fs-14 mb-1" data-dz-name>&nbsp;</h5>
-                                <p className="fs-13 text-muted mb-0" data-dz-size />
-                                <strong className="error text-danger" data-dz-errormessage />
+                                <h5 className="fs-14 mb-1" data-dz-name>&nbsp;Download Excel Format</h5>
+                                <p className="fs-13 text-muted mb-0" data-dz-size/>
+                                <strong className="error text-danger" data-dz-errormessage/>
                               </div>
                             </div>
                             <div className="flex-shrink-0 ms-3">
-                              <button data-dz-remove className="btn btn-sm btn-danger">Delete</button>
+                              <button data-dz-remove className="btn btn-sm btn-danger" onClick={download}>Download</button>
                             </div>
                           </div>
                         </div>
                       </li>
                     </ul>
                 </form>
-                <div className="hstack gap-2 mt-4">
-                  <button type="submit" className="btn btn-primary">Save</button>
-                  <button type="button" className="btn btn-light">Discard</button>
-                </div>
               </div>
             </div>
           </div>
